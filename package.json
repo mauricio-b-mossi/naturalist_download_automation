@@ -1,5 +1,10 @@
 {
-  "dependencies": {
+    "scripts":{
+        "start": "node src/index.js",
+        "types": "node src/types/optionBuilderScript.js"
+    },
+    "dependencies": {
+    "dotenv": "^16.4.2",
     "puppeteer": "^22.0.0"
   }
 }

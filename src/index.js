@@ -1,19 +1,22 @@
+require("dotenv").config()
+
+const c = require("./constants.js")
+
 const puppeteer = require("puppeteer")
 
-const item = "mangroove skipper"
-const email = "emailscraping47@gmail.com"
-const pwd = "emailScraping47"
-
 async function main() {
+
+    console.log(process.env.USER)
+    console.log(process.env.PASSWORD)
 
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
-    await page.goto("https://www.inaturalist.org/");
+    await page.goto(c.naturalist);
 
     await page.waitForSelector("input.form-control.ui-autocomplete-input");
 
-    await page.type("input.form-control.ui-autocomplete-input", item);
+    await page.type("input.form-control.ui-autocomplete-input", c.demoTaxa);
 
     await page.waitForSelector("a.ac-view.view-observations");
 
@@ -29,11 +32,11 @@ async function main() {
 
     await page.waitForSelector("input#user_email")
 
-    await page.type("input#user_email", email)
+    await page.type("input#user_email", process.env.USER)
 
     await page.waitForSelector("input#user_password")
 
-    await page.type("input#user_password", pwd)
+    await page.type("input#user_password", process.env.PASSWORD)
 
     await page.waitForSelector('input[type="submit"][name="commit"]')
 
