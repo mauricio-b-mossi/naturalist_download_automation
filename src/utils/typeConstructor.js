@@ -13,9 +13,9 @@ module.exports.construct = async function(typeName, properties, defaultValue = n
 
     const file = await fs.open(path.join(path.dirname(__dirname), filePath), "a");
 
-    await file.appendFile(`const ${typeName} = {\n\t`)
+    typeName = typeName.replace(" ", "_")
 
-    let str = "";
+    let str = `const ${typeName} = {\n\t`;
 
     // create huge string to append.
     for (let i = 0; i < properties.length; i++) {

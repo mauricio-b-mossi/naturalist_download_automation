@@ -1,7 +1,7 @@
 {
     "scripts":{
         "start": "node src/index.js",
-        "types": "node src/types/optionBuilderScript.js"
+        "gettypes": "node src/types/fetchTypes.js"
     },
     "dependencies": {
     "dotenv": "^16.4.2",

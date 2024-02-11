@@ -5,8 +5,10 @@
     * @param {() => Promise<Any>} asyncFuncs - List of asynchronous functions that return Promise. 
     * @param {number} idx - Index of asynchronous funciton to be executed.
     */
-modules.exports = async function sequentialize(asyncFuncs, idx = 0) {
-    if (asyncFuncs.length < idx) {
-        asyncFuncs[idx]().then(() => sequentialize(asyncFuncs, idx++))
-    } else return
+module.exports = async function sequentialize(asyncFuncs, idx = 0) {
+    if (idx < asyncFuncs.length) {
+        asyncFuncs[idx]().then(() => sequentialize(asyncFuncs, ++idx))
+    } else {
+        return
+    }
 }

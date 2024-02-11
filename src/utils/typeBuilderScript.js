@@ -1,7 +1,7 @@
 require("dotenv").config()
-const tc = require("../utils/typeConstructor.js")
+const tc = require("./typeConstructor.js")
 const c = require("../constants.js")
-const sequentialize = require("../utils/sequentialize.js")
+const sequentialize = require("./sequentialize.js")
 
 const puppeteer = require("puppeteer")
 
@@ -9,14 +9,15 @@ const puppeteer = require("puppeteer")
 /**
     * Builds DTO objects from naturalist download options. 
     */
-async function typeBuilder() {
-    const [headers, properties] = await fetch()
+module.exports = async function typeBuilder(filename) {
+    const [headers, properties] = await fetchDtoComponents()
 
     const asyncFuncs = []
 
-    for (let i = 0; i < headers.length; i++) {
+    // TODO: Using properties since we need to get rid of the extra header fetched.
+    for (let i = 0; i < properties.length; i++) {
         asyncFuncs.push(async () => {
-            tc.construct(headers[i], properties[i], false, "_types.js")
+            tc.construct(headers[i], properties[i], false, filename)
         })
     }
 
@@ -25,9 +26,9 @@ async function typeBuilder() {
 }
 
 /**
-    * @returns {[string[], string[]]} - Returns an array with of two arrays. The first array is the contains the headers. The second array contains the properties per header.
+    * @returns {Promise<[string[], string[]]>} - Returns an array with of two arrays. The first array is the contains the headers. The second array contains the properties per header.
     */
-async function fetch() {
+async function fetchDtoComponents() {
     const browser = await puppeteer.launch({ headless: false })
 
     const page = await browser.newPage();
@@ -69,11 +70,10 @@ async function fetch() {
 
         const regex = /\W*\n+\t*\n\W*/
 
-        const entries = []
-        const headers = []
+        const entriesArr = []
+        const headersArr = []
 
         const fetchedHeaders = document.querySelectorAll("h4")
-        fetchedHeaders.pop()
 
         extractHeader(fetchedHeaders);
 
@@ -81,18 +81,20 @@ async function fetch() {
 
         function extractEntries(tables) {
             for (const node of tables) {
-                entries.push(node?.innerText?.split(regex))
+                entriesArr.push(node?.innerText?.split(regex))
             }
         }
 
         function extractHeader(headers) {
             for (const h of headers) {
-                headers.push(h?.innerText?.substring(0, h.indexOf(" (")));
+                headersArr.push(h?.innerText?.substring(0, h?.innerText?.indexOf(" (")));
             }
         }
 
-        return [headers, entries]
+        return [headersArr, entriesArr]
     })
+
+    await browser.close()
 
     return entries;
 }

@@ -51,7 +51,12 @@ async function main() {
         }
     })
 
-    // Can either do by individual items or cols.
+    /* 1. Continue to select the columns 
+    *  2. Set Date Interval.
+    *  3. Download.
+    *  4. Repeat.
+    *  5. Implement Error Hanlding Like Email When Service Crashes.
+    */
 
 }
 
